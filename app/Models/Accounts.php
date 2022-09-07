@@ -17,4 +17,8 @@ class Accounts extends Model
         'address_key',
         'cash'
     ];
+
+    public function invoices(){
+        return $this->hasMany(Invoice::class);
+    }
 }
