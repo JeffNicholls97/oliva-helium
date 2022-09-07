@@ -15,5 +15,6 @@ class Accounts extends Model
         'email_address',
         'housing_address',
         'address_key',
+        'cash'
     ];
 }

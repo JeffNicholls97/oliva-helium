@@ -12,6 +12,7 @@ class AccountsAdd extends Component
     public $address;
     public $emailAddress;
     public $accountKey;
+    public $cash = false;
 
     public function submitAccountData()
     {
@@ -21,6 +22,7 @@ class AccountsAdd extends Component
             'housing_address' => $this->address,
             'email_address' => $this->emailAddress,
             'address_key' => $this->accountKey,
+            'cash' => $this->cash
         ]);
     }
 

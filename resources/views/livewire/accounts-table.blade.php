@@ -50,7 +50,7 @@
                     <div class="col-span-2 flex items-center">
                         <a class="bg-black text-sm text-white rounded-lg px-4 py-2" href="{{route('admin.accounts.show', $account->id)}}">View Account</a>
                         <button wire:click="deleteAccountData( {{ $account->id }} )" class="bg-red-500 text-white rounded-lg px-4 py-2">Delete</button>
-                        <button wire:click="editAccountData( {{ $account->id }} )" class="bg-red-500 text-white rounded-lg px-4 py-2">Delete</button>
+                        <button wire:click="editAccountData( {{ $account->id }} )" class="bg-green-500 text-white rounded-lg px-4 py-2">Edit</button>
                     </div>
                 </div>
             @endforeach
