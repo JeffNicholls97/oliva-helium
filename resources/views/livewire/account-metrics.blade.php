@@ -77,7 +77,10 @@
                     <livewire:accounts-graph :coinvalue="$coinvalue" :address="$address" :account="$account" />
                 </div>
             </div>
-            <div class="col-span-4 bg-gray-100 rounded-lg p-5">Past Invoices</div>
+            <div class="col-span-4 bg-gray-100 rounded-lg p-5">
+                Past Invoices
+                <livewire:account-invoice-list :address="$address" :account="$account"/>
+            </div>
         </div>
         <div class="mt-5 flex-grow w-full h-full p-5 border border-gray-100 bg-gray-50 rounded-lg">
             <livewire:accounts-miner-transactions-all :coinvalue="$coinvalue" :address="$address" :account="$account" />
