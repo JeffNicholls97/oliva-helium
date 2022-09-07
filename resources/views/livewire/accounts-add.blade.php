@@ -14,6 +14,7 @@
                     email-addrss:<input class="border border-black" wire:model="emailAddress" type="text">
                     address:<textarea class="border border-black" wire:model="address"></textarea>
                     account-key:<input class="border border-black" wire:model="accountKey" type="text">
+                    cash:<input class="border border-black" wire:model="cash" type="checkbox">
                     <button class="p-3 bg-red-500 text-white" type="submit">save</button>
                 </form>
             </div>

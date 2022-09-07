@@ -20,7 +20,8 @@ return new class extends Migration
             $table->string('email_address');
             $table->string('housing_address');
             $table->string('address_key');
-            $table->string('account_image');
+            $table->boolean('cash');
+            $table->string('account_image')->nullable();
             $table->timestamps();
         });
     }
