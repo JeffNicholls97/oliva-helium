@@ -2,10 +2,12 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\Invoice;
 use Livewire\Component;
 use Illuminate\Support\Facades\Http;
 use Carbon\Carbon;
 use DateTime;
+use PDF;
 
 class AccountsMinerTransactionsAll extends Component
 {
@@ -24,7 +26,7 @@ class AccountsMinerTransactionsAll extends Component
             $this->startDate = Carbon::now()->subDays(1)->toDateString();
             $this->endDate = Carbon::now()->addDays(1)->toDateString();
         }
-        
+
         $response = Http::withHeaders([
             'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36',
         ])->get('https://api.helium.io/v1/hotspots/'. $this->address['address_key'] .'/rewards?max_time='. $this->endDate .'&min_time='. $this->startDate .'');
@@ -48,6 +50,23 @@ class AccountsMinerTransactionsAll extends Component
             }
         }
 
+    }
+
+    public function generateSingleInvoice()
+    {
+        if($this->startDate == null && $this->endDate == null) {
+            $this->startDate = Carbon::now()->subDays(1)->toDateString();
+            $this->endDate = Carbon::now()->addDays(1)->toDateString();
+        }
+
+        $formatData = $this->newTran;
+
+        $invoice = Invoice::create([
+            'accounts_id' => $this->account,
+            'invoice_link'  => '/test',
+            'cash' => true,
+            'invoice_data' => $formatData
+        ]);
     }
 
     public function render()

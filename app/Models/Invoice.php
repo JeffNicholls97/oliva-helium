@@ -16,6 +16,11 @@ class Invoice extends Model
         'invoice_data'
     ];
 
+    protected $casts = [
+        'id' => 'int',
+        'invoice_data' => 'array'
+    ];
+
     public function account()
     {
         return $this->belongsTo(Accounts::class);
