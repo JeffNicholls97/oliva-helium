@@ -40,13 +40,12 @@
         <div>
             {{-- <button wire:click="$set('cursor', '{{$newTran['cursor']}}')">next</button> --}}
         </div>
+        <div>
+            <button wire:click="generateSingleInvoice">generate account invoice</button>
+        </div>
     </div>
-    <div class="w-full">
-        {{-- @dump($transactions) --}}
-        {{-- @isset($newTran['cursor'])
-            {{ $newTran['cursor'] }}    
-        @endisset --}}
-        <div class="w-full">
+    <div class="w-full h-72 overflow-y-scroll">
+        <div class="w-full sticky top-0">
             <div class="table-header grid grid-cols-12 w-full bg-gray-100 rounded-lg p-3">
                 <div class="col-span-4 font-bold">
                     Reward
@@ -96,13 +95,13 @@
                             </div>
                         </div>
                         <div class="col-span-2 relative flex items-center">
-                            
+
                         </div>
                         <div class="col-span-2">
-    
+
                         </div>
                         <div class="col-span-2 flex items-center">
-                            
+
                         </div>
                     </div>
                 @endforeach

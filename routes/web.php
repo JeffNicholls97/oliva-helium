@@ -23,5 +23,7 @@ Route::get('/admin/invoices', [\App\Http\Controllers\InvoicesController::class, 
 
 Route::get('/admin/settings', [\App\Http\Controllers\SettingsController::class, 'index'])->middleware(['auth'])->name('admin.settings');
 
+Route::get('/admin/downloadInvoice/{id}','\App\Http\Livewire\AccountInvoiceList@downloadInvoice');
+
 
 require __DIR__.'/auth.php';
