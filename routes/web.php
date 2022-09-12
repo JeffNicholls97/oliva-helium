@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use \App\Http\Livewire\AccountInvoiceList;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,7 +24,7 @@ Route::get('/admin/invoices', [\App\Http\Controllers\InvoicesController::class, 
 
 Route::get('/admin/settings', [\App\Http\Controllers\SettingsController::class, 'index'])->middleware(['auth'])->name('admin.settings');
 
-Route::get('/admin/downloadInvoice/{id}','\App\Http\Livewire\AccountInvoiceList@downloadInvoice');
+Route::get('/admin/downloadInvoice/{id}', [AccountInvoiceList::class, 'downloadInvoice'])->name('admin.download');
 
 
 require __DIR__.'/auth.php';

@@ -45,7 +45,7 @@
         </div>
     </div>
     <div class="w-full h-72 overflow-y-scroll">
-        <div class="w-full sticky top-0">
+        <div class="w-full">
             <div class="table-header grid grid-cols-12 w-full bg-gray-100 rounded-lg p-3">
                 <div class="col-span-4 font-bold">
                     Reward
