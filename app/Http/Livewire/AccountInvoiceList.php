@@ -21,7 +21,6 @@ class AccountInvoiceList extends Component
         $this->invoices = Accounts::find($this->account)->invoices;
     }
 
-
     public function downloadInvoice($id) {
         $invoices = Invoice::find($id);
         $pdf = PDF::loadView('pdf', compact('invoices'));

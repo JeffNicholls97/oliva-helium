@@ -36,9 +36,27 @@ class AccountsMinerTransactionsAll extends Component
             if (isset($transactions['cursor']))
             {
                 $transactionCursor = $transactions['cursor'];
-                $responseNew = Http::withHeaders([
-                    'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36',
-                ])->get('https://api.helium.io/v1/hotspots/'. $this->address['address_key'] .'/rewards?max_time='. $this->endDate .'&min_time='. $this->startDate .'&cursor='.$transactionCursor.'');
+                $baseUrl = 'https://api.helium.io/v1/hotspots/'. $this->address['address_key'] .'/rewards?max_time='. $this->endDate .'&min_time='. $this->startDate .'';
+                $transactionArray = [];
+                do {
+                    $responseNew = Http::withHeaders([
+                        'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36',
+                    ])->get($baseUrl.'&cursor='.$transactionCursor.'');
+                    if ($responseNew->status() == 200) {
+                        $responseTest = $responseNew->json();
+                        if (array_key_exists('cursor', $responseTest)) {
+                            $transactionCursor = $responseTest['cursor'];
+                            $transactionArray['cursor'] = $responseTest['cursor'];
+                        }
+                        if(in_array(isset($transactionCursor), $transactionArray)){
+                            foreach($responseTest['data'] as $dataline) {
+                                array_push($transactionArray, $dataline);
+                            }
+                        }
+                        sleep(1);
+                    }
+                }
+                while(isset($responseTest['cursor']) && in_array(isset($transactionCursor), $transactionArray));
             }else {
                 $responseNew = Http::withHeaders([
                     'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36',
@@ -46,7 +64,14 @@ class AccountsMinerTransactionsAll extends Component
             }
 
             if($responseNew->status() == 200) {
-                $this->newTran = $responseNew->collect();
+                if($transactionArray) {
+                    unset($transactionArray['cursor']);
+                    $this->newTran = $transactionArray;
+                    //dd($this->newTran);
+                }else{
+                    $noCursor = $responseNew->collect();
+                    $this->newTran = $noCursor['data'];
+                }
             }
         }
 

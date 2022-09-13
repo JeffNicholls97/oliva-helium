@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use App\Models\Accounts;
+use App\Models\Invoice;
 use Illuminate\Support\Facades\Http;
 use Carbon\Carbon;
 use DateTime;
@@ -19,6 +20,7 @@ class AccountMetrics extends Component
     public $minTime;
     public $maxTime;
     public $coinvalue;
+    public $totalInvoices;
 
     public function mount($accountProfile)
     {
@@ -28,6 +30,13 @@ class AccountMetrics extends Component
     public function getAddressFromAccount()
     {
         $this->address = Accounts::where('id', $this->account)->get()->first();
+    }
+
+    public function invoiceCount()
+    {
+        $invoices = Accounts::find($this->account)->invoices;
+
+        $this->totalInvoices = count($invoices);
     }
 
     public function getCurrentHntCoinValue()
@@ -49,7 +58,7 @@ class AccountMetrics extends Component
 
         if ($response->status() == 200){
             $this->accountStats = $response->collect();
-            
+
             $date = date("Y-m-d g:i:s a", strtotime($this->accountStats['data']['timestamp_added']));
             $dateNew = Carbon::parse($date)->diffForHumans();
 
@@ -63,6 +72,7 @@ class AccountMetrics extends Component
     {
         $this->getAddressFromAccount();
         $this->getCurrentHntCoinValue();
+        $this->invoiceCount();
         return view('livewire.account-metrics');
     }
 }
