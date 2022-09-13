@@ -77,8 +77,8 @@
                     <livewire:accounts-graph :coinvalue="$coinvalue" :address="$address" :account="$account" />
                 </div>
             </div>
-            <div class="col-span-4 bg-gray-100 rounded-lg p-5">
-                <span class="bg-white mb-5 flex items-center block rounded-lg py-3 px-5">List Invoices <span class="w-8 text-sm text-red-500 ml-2 h-8 flex items-center justify-center p-2 rounded-full bg-gray-100">{{$totalInvoices}}</span></span>
+            <div class="col-span-4 bg-white border border-gray-100 rounded-lg p-5">
+                <span class="bg-gray-50 mb-5 flex justify-between items-center block rounded-lg py-3 px-5">List Invoices <span class="w-8 text-sm text-red-500 ml-2 h-8 flex items-center justify-center p-2 rounded-full bg-gray-100">{{$totalInvoices}}</span></span>
                 <livewire:account-invoice-list :address="$address" :account="$account"/>
             </div>
         </div>

@@ -19,6 +19,7 @@ class AccountsMinerTransactionsAll extends Component
     public $newTran;
     public $convertedTimestamp;
     public $coinvalue;
+    public $estimatedTotal;
 
     public function requestMinerTransactionsForAccountCalenderInput()
     {
@@ -67,11 +68,14 @@ class AccountsMinerTransactionsAll extends Component
                 if($transactionArray) {
                     unset($transactionArray['cursor']);
                     $this->newTran = $transactionArray;
+
                     //dd($this->newTran);
                 }else{
                     $noCursor = $responseNew->collect();
                     $this->newTran = $noCursor['data'];
                 }
+
+
             }
         }
 
