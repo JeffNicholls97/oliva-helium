@@ -19,6 +19,7 @@ class AccountsMinerTransactionsAll extends Component
     public $newTran;
     public $convertedTimestamp;
     public $coinvalue;
+    public $estimatedTotal;
 
     public function requestMinerTransactionsForAccountCalenderInput()
     {
@@ -67,6 +68,7 @@ class AccountsMinerTransactionsAll extends Component
                 if($transactionArray) {
                     unset($transactionArray['cursor']);
                     $this->newTran = $transactionArray;
+
                     //dd($this->newTran);
                 }else{
                     $noCursor = $responseNew->collect();
@@ -74,7 +76,6 @@ class AccountsMinerTransactionsAll extends Component
                 }
             }
         }
-
     }
 
     public function generateSingleInvoice()
@@ -92,6 +93,9 @@ class AccountsMinerTransactionsAll extends Component
             'cash' => true,
             'invoice_data' => $formatData
         ]);
+
+        $this->emit('refreshComponent');
+
     }
 
     public function render()

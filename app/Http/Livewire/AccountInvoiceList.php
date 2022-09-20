@@ -15,6 +15,8 @@ class AccountInvoiceList extends Component
     public $invoices;
     public $account;
     public $address;
+    protected $listeners = ['refreshComponent' => '$refresh'];
+
 
     public function getInvoices()
     {
