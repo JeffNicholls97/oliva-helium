@@ -61,10 +61,11 @@
                     $arr = [];
                     array_push($arr, $transaction['amount']);
                   $estimatedTotal = array_sum($arr);
+                  
                 }
                 @endphp
             @endif
-            Total for this period: {{ round($estimatedTotal, 4) }}
+            Total for this period: {{ $estimatedTotal }}
         </div>
         <div class="w-72 relative">
             <button wire:loading.remove class="bg-[#FA4040] w-full py-2 text-white rounded-lg" wire:click="generateSingleInvoice">Generate Invoice from {{ $startDate  }}</button>
@@ -122,7 +123,7 @@
                                     @endif
                                 </div>
                             </div>
-                            <div class="col-span-2 relative flex items-center">
+                            <div class="col-span-2 flex items-center">
 
                             </div>
                             <div class="col-span-2">

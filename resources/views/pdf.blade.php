@@ -13,7 +13,7 @@
     </tr>
     </thead>
     <tbody>
-    @foreach($invoices->invoice_data['data'] as $invoice_key)
+    @foreach($invoices->invoice_data as $invoice_key)
         <tr>
             <td>
                 {{$invoice_key['amount']}}

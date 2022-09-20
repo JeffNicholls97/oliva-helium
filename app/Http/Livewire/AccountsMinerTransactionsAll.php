@@ -74,11 +74,8 @@ class AccountsMinerTransactionsAll extends Component
                     $noCursor = $responseNew->collect();
                     $this->newTran = $noCursor['data'];
                 }
-
-
             }
         }
-
     }
 
     public function generateSingleInvoice()
@@ -96,6 +93,9 @@ class AccountsMinerTransactionsAll extends Component
             'cash' => true,
             'invoice_data' => $formatData
         ]);
+
+        $this->emit('refreshComponent');
+
     }
 
     public function render()
