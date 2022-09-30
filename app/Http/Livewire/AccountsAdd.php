@@ -15,7 +15,7 @@ class AccountsAdd extends Component
     public $address;
     public $emailAddress;
     public $accountKey;
-    public $cash = false;
+    public $cash = 1;
 
     public function submitAccountData()
     {
@@ -36,6 +36,8 @@ class AccountsAdd extends Component
             'address_key' => $this->accountKey,
             'cash' => $this->cash
         ]);
+
+        $this->reset();
     }
 
     public function render()

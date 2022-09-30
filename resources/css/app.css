@@ -24,3 +24,7 @@
     to {
         -webkit-transform: rotate(360deg);
         transform: rotate(360deg); } }
+
+.container.range-plugin.preset-plugin.show {
+    z-index: 10!important;
+}
