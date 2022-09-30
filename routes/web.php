@@ -24,7 +24,7 @@ Route::get('/admin/invoices', [\App\Http\Controllers\InvoicesController::class, 
 
 Route::get('/admin/settings', [\App\Http\Controllers\SettingsController::class, 'index'])->middleware(['auth'])->name('admin.settings');
 
-Route::get('/admin/downloadInvoice/{id}', [AccountInvoiceList::class, 'downloadInvoice'])->name('admin.download');
+Route::get('/admin/downloadInvoice/{id}/{account}', [AccountInvoiceList::class, 'downloadInvoice'])->name('admin.download');
 
 
 require __DIR__.'/auth.php';

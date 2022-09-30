@@ -9,17 +9,17 @@ class TopBarStats extends Component
 {
     public $isLoadingStats = true;
     public $heliumStats;
-    public $CoinPrice;
+    public $coinPrice;
 
     public function getCurrentCoinInfo()
     {
-        $response = Http::withHeaders([
+        $coinResponse = Http::withHeaders([
             'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36',
-        ])->get('https://api.helium.io/v1/stats');
+        ])->get('https://api.coingecko.com/api/v3/simple/price?ids=helium&vs_currencies=gbp');
 
-        if ($response->status() == 200){
-            $this->heliumStats = $response->collect();
-            $this->coinPrice = number_format($this->heliumStats['data']['counts']['coingecko_price_gbp'], 2) / 100;
+        if ($coinResponse->status() == 200){
+            $this->heliumStats = $coinResponse->collect();
+            $this->coinPrice = number_format($this->heliumStats['helium']['gbp'], 2);
             $this->isLoadingStats = false;
         }
     }

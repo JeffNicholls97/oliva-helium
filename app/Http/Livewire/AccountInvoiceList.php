@@ -23,10 +23,19 @@ class AccountInvoiceList extends Component
         $this->invoices = Accounts::find($this->account)->invoices;
     }
 
-    public function downloadInvoice($id) {
+    public function downloadInvoice($id, $account) {
+
+        $accountName = Accounts::select('first_name','last_name')->where('id', $account)->get();
+        $accountNameRender = $accountName->collect();
+        $currentDate = Carbon::now()->format('M-Y');
+
+        $fullString = 'invoice-'. $accountNameRender[0]['first_name'] .'-'. $accountNameRender[0]['last_name'] .'-'. $currentDate .'';
+
+
         $invoices = Invoice::find($id);
         $pdf = PDF::loadView('pdf', compact('invoices'));
-        return $pdf->download('test.pdf');
+        $pdf->setPaper('A4', 'landscape');
+        return $pdf->download($fullString . '.pdf');
     }
 
     public function render()

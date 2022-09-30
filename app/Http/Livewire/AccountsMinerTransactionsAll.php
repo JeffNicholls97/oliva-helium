@@ -20,6 +20,9 @@ class AccountsMinerTransactionsAll extends Component
     public $convertedTimestamp;
     public $coinvalue;
     public $estimatedTotal;
+    public $fullInvoiceDataArray;
+    public $priceSold;
+    public $lastActiveTime;
 
     public function requestMinerTransactionsForAccountCalenderInput()
     {
@@ -34,11 +37,11 @@ class AccountsMinerTransactionsAll extends Component
 
         if ($response->status() == 200){
             $transactions = $response->collect();
+            $transactionArray = [];
             if (isset($transactions['cursor']))
             {
                 $transactionCursor = $transactions['cursor'];
                 $baseUrl = 'https://api.helium.io/v1/hotspots/'. $this->address['address_key'] .'/rewards?max_time='. $this->endDate .'&min_time='. $this->startDate .'';
-                $transactionArray = [];
                 do {
                     $responseNew = Http::withHeaders([
                         'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36',
@@ -65,16 +68,64 @@ class AccountsMinerTransactionsAll extends Component
             }
 
             if($responseNew->status() == 200) {
+                $responseNull = $responseNew->collect();
                 if($transactionArray) {
                     unset($transactionArray['cursor']);
+                    $this->lastActiveTime = $transactionArray[0]['timestamp'];
                     $this->newTran = $transactionArray;
-
-                    //dd($this->newTran);
-                }else{
+                }elseif($responseNull['data']){
                     $noCursor = $responseNew->collect();
+                    $this->lastActiveTime = $noCursor['data'][0]['timestamp'];
+
                     $this->newTran = $noCursor['data'];
+                }else{
+                    $this->inactiveMiner();
                 }
             }
+        }
+    }
+
+    public function inactiveMiner()
+    {
+        $this->newTran['data']['errorCode'] = 'Miner is inactive';
+    }
+
+    public function fullDataToPass()
+    {
+        $this->fullInvoiceDataArray = array();
+        foreach ($this->newTran as $key => $transaction) {
+            $block = $transaction['block'];
+
+            $blockResponse = Http::withHeaders([
+                'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36',
+            ])->retry(3, 200)->get('https://api.helium.io/v1/oracle/prices/'. $block .'');
+
+            if($blockResponse->status() == 200) {
+                $blockConverted = $blockResponse->json();
+                if(array_key_exists('price', $blockConverted['data'])) {
+                    $transaction['price'] = $blockConverted['data']['price'];
+                }else{
+                    $transaction['price'] = 'No Price Saved at current block';
+                }
+            }
+            $this->fullInvoiceDataArray[$key] = $transaction;
+        }
+        $addressResponse = Http::withHeaders([
+            'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36',
+        ])->retry(3, 200)->get('https://api.helium.io/v1/hotspots/'.$this->address['address_key'].'');
+        if($addressResponse->status() == 200) {
+            $addressConverted = $addressResponse->json();
+            $this->fullInvoiceDataArray['miner-info'] = $addressConverted;
+        }
+        $conversionResponse = Http::withHeaders([
+            'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36',
+        ])->get('https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies/eur/gbp.json');
+
+        if($conversionResponse->status() == 200) {
+            $conversionConverted = $conversionResponse->json();
+            $GBP_price = $conversionConverted['gbp'];
+
+            $this->fullInvoiceDataArray['miner-info']['gbp-conversion'] = $GBP_price;
         }
     }
 
@@ -84,8 +135,9 @@ class AccountsMinerTransactionsAll extends Component
             $this->startDate = Carbon::now()->subDays(1)->toDateString();
             $this->endDate = Carbon::now()->addDays(1)->toDateString();
         }
-
-        $formatData = $this->newTran;
+        $this->fullDataToPass();
+        $this->fullInvoiceDataArray['miner-info']['price-sold'] = $this->priceSold;
+        $formatData = $this->fullInvoiceDataArray;
 
         $invoice = Invoice::create([
             'accounts_id' => $this->account,
