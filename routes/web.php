@@ -14,6 +14,7 @@ use \App\Http\Livewire\AccountInvoiceList;
 |
 */
 
+Route::get('/', [\App\Http\Controllers\DashboardController::class, 'index'])->middleware(['auth']);
 Route::get('/admin/', [\App\Http\Controllers\DashboardController::class, 'index'])->middleware(['auth']);
 Route::get('/admin/dashboard', [\App\Http\Controllers\DashboardController::class, 'index'])->middleware(['auth'])->name('admin.dashboard');
 
