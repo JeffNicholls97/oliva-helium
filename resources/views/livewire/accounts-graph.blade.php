@@ -6,13 +6,12 @@
                 <p class="text-xl">{{ round($graphValues['data']['total'],4) }}<p>
                     @php
                         $hntAccountValue = round($graphValues['data']['total'],4);
-
-                        $overallFull = $hntAccountValue * $coinvalue['helium']['gbp'];
+                        $overallFull = $hntAccountValue * $coinvalue;
                         $overallSplit = $overallFull / 2;
                     @endphp
                 <p class="text-sm text-gray-400">£{{ number_format($overallFull, 2) }}</p>
                 <p class="text-sm text-gray-400">after split £{{ number_format($overallSplit, 2) }}</p>
-                
+
             </div>
             <div class="col-span-10 flex flex-col justify-between">
                 <div class="w-full flex justify-end gap-5">

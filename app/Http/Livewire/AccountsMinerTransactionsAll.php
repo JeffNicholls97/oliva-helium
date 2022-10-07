@@ -98,7 +98,7 @@ class AccountsMinerTransactionsAll extends Component
 
             $blockResponse = Http::withHeaders([
                 'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36',
-            ])->retry(3, 200)->get('https://api.helium.io/v1/oracle/prices/'. $block .'');
+            ])->retry(3, 1000)->get('https://api.helium.io/v1/oracle/prices/'. $block .'');
 
             if($blockResponse->status() == 200) {
                 $blockConverted = $blockResponse->json();
@@ -112,7 +112,7 @@ class AccountsMinerTransactionsAll extends Component
         }
         $addressResponse = Http::withHeaders([
             'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36',
-        ])->retry(3, 200)->get('https://api.helium.io/v1/hotspots/'.$this->address['address_key'].'');
+        ])->retry(3, 1000)->get('https://api.helium.io/v1/hotspots/'.$this->address['address_key'].'');
         if($addressResponse->status() == 200) {
             $addressConverted = $addressResponse->json();
             $this->fullInvoiceDataArray['miner-info'] = $addressConverted;

@@ -2,13 +2,13 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\Setting;
 use Livewire\Component;
 use App\Models\Accounts;
 use App\Models\Invoice;
 use Illuminate\Support\Facades\Http;
 use Carbon\Carbon;
 use DateTime;
-use Asantibanez\LivewireCharts\Facades\LivewireCharts;
 
 class AccountMetrics extends Component
 {
@@ -41,13 +41,24 @@ class AccountMetrics extends Component
 
     public function getCurrentHntCoinValue()
     {
-        $coinResponse = Http::withHeaders([
-            'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36',
-        ])->get('https://api.coingecko.com/api/v3/simple/price?ids=helium&vs_currencies=gbp');
+//        $coinResponse = Http::withHeaders([
+//            'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36',
+//        ])->get('https://api.coingecko.com/api/v3/simple/price?ids=helium&vs_currencies=gbp');
+//
+//        if ($coinResponse->status() == 200){
+//            $this->coinvalue = $coinResponse->collect();
+//        }else {
+//            $coinMarketResponse = Http::withHeaders([
+//                'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36',
+//            ])->get('https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?slug=helium&convert=GBP&CMC_PRO_API_KEY=1a943e6d-687b-4bc7-b722-eaf3c7634788');
+//
+//            if($coinMarketResponse->status() == 200) {
+//                $this->coinvalue = $coinMarketResponse->collect();
+//            }
+//        }
 
-        if ($coinResponse->status() == 200){
-            $this->coinvalue = $coinResponse->collect();
-        }
+        $settings = Setting::query()->where('id', 1)->first();
+        $this->coinvalue = $settings->helium_price_gbp;
     }
 
     public function requestHotspotStats()

@@ -6,7 +6,6 @@
                     <div class="flex flex-col">
                         <span class="text-gray-400 text-sm">#{{ str_pad($invoice->id, 4, '0', STR_PAD_LEFT) }} - {{ \Carbon\Carbon::parse($invoice->created_at)->format('M Y') }}@if($loop->last)<span class="text-red-500 text-sm"> <span class="text-gray-400">|</span> Latest Invoice</span>@endif</span>
                         <span class="text-sm">Invoice Generated <span>{{ \Carbon\Carbon::parse($invoice->created_at)->diffForHumans() }}</span></span>
-
                     </div>
                 </div>
                 <div class="w-20 flex items-center justify-end">

@@ -17,7 +17,7 @@
             <livewire:menu-bar />
             <div class="flex-grow flex flex-col gap-5">
                 <livewire:top-bar />
-                <div class="bg-white p-5 rounded-lg flex-grow">
+                <div class="bg-white overflow-y-auto p-5 rounded-lg flex-grow">
                     @yield('content')
                 </div>
             </div>
