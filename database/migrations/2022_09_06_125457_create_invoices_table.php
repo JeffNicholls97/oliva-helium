@@ -18,6 +18,7 @@ return new class extends Migration
             $table->integer('accounts_id');
             $table->string('invoice_link')->nullable();
             $table->boolean('cash');
+            $table->timestamp('invoice_date')->nullable();
             $table->json('invoice_data')->nullable();
             $table->timestamps();
         });
