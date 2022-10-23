@@ -3,6 +3,7 @@
         <div class="grid flex-grow w-full grid-cols-12 gap-5">
             <div class="col-span-2">
                 <p class="text-sm text-gray-400">Earnings (GBP)</p>
+                @if($graphValues['data']['total'])
                 <p class="text-xl">{{ round($graphValues['data']['total'],4) }}<p>
                     @php
                         $hntAccountValue = round($graphValues['data']['total'],4);
@@ -11,7 +12,7 @@
                     @endphp
                 <p class="text-sm text-gray-400">£{{ number_format($overallFull, 2) }}</p>
                 <p class="text-sm text-gray-400">after split £{{ number_format($overallSplit, 2) }}</p>
-
+                @endif
             </div>
             <div class="col-span-10 flex flex-col justify-between">
                 <div class="w-full flex justify-end gap-5">
