@@ -40,19 +40,17 @@ class GetHeliumPriceHourly extends Command
      */
     public function handle()
     {
-        \Log::info("Cron is working fine!");
+        $coinResponse = Http::withHeaders([
+            'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36',
+        ])->get('https://api.coingecko.com/api/v3/simple/price?ids=helium&vs_currencies=gbp');
 
-       $coinResponse = Http::withHeaders([
-           'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36',
-       ])->get('https://api.coingecko.com/api/v3/simple/price?ids=helium&vs_currencies=gbp');
+        if ($coinResponse->status() == 200) {
+            $coinvalue = $coinResponse->collect();
+            $this->heliumPrice = $coinvalue['helium']['gbp'];
+        }
 
-       if ($coinResponse->status() == 200) {
-           $coinvalue = $coinResponse->collect();
-           $this->heliumPrice = $coinvalue['helium']['gbp'];
-       }
-
-       $heliumCol = Setting::query()->where('id', 1)->first();
-       $heliumCol->helium_price_gbp = $this->heliumPrice;
-       $heliumCol->save();
+        $heliumCol = Setting::query()->where('id', 1)->first();
+        $heliumCol->helium_price_gbp = $this->heliumPrice;
+        $heliumCol->save();
     }
 }

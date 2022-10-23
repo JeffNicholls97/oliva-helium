@@ -1,9 +1,8 @@
 @extends('layouts.main')
+@push('meta')
+<title>Oliva - Accounts</title>
+@endpush
 
 @section('content')
-<div class="mb-5">
-    <livewire:accounts-add />
-</div>
-
 <livewire:accounts-table />
 @endsection

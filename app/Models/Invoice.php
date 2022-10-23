@@ -13,7 +13,8 @@ class Invoice extends Model
         'invoice_link',
         'accounts_id',
         'cash',
-        'invoice_data'
+        'invoice_data',
+        'invoice_date',
     ];
 
     protected $casts = [

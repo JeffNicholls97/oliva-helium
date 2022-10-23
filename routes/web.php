@@ -27,5 +27,9 @@ Route::get('/admin/settings', [\App\Http\Controllers\SettingsController::class, 
 
 Route::get('/admin/downloadInvoice/{id}/{account}', [AccountInvoiceList::class, 'downloadInvoice'])->name('admin.download');
 
+//Route::get('/demo', function () {
+//    return view('emails.invoice_email');
+//});
+
 
 require __DIR__.'/auth.php';

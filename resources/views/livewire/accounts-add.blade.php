@@ -1,5 +1,5 @@
 <div>
-    <div x-data="{ accountModal: false }">
+    <div x-cloak x-data="{ accountModal: false }">
         <div  class="w-full flex items-center justify-end">
             <button x-on:click="accountModal = !accountModal" class="bg-red-500 text-white p-3 rounded-lg">Add Account</button>
         </div>
