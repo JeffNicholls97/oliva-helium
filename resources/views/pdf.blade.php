@@ -47,7 +47,7 @@
         $minerName = str_replace("-", " ", $string)
     @endphp
     <span class="center-text" style="font-size: 30px; margin-top: 100px;">Invoice - <span style="text-transform: capitalize">{{ $minerName }}</span></span>
-    <img src="/var/www/html/public/images/oliva_logo.jpg">
+    <img src="/home/forge/default/public/public/images/oliva_logo.jpg">
     <span class="center-text" style="font-size: 20px; margin-top:20px; ">Oliva Team</span>
     <span class="center-text" style="font-size: 20px; margin-top: 5px;">{{ $dateFormat }}</span>
 </div>
