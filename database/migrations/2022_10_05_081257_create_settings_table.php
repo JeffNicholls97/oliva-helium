@@ -15,7 +15,8 @@ return new class extends Migration
     {
         Schema::create('settings', function (Blueprint $table) {
             $table->id();
-            $table->integer('helium_price_gbp')->nullable();
+            $table->float('helium_price_gbp')->nullable();
+            $table->integer('total_miners')->nullable();
             $table->timestamps();
         });
     }

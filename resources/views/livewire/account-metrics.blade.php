@@ -16,11 +16,11 @@
                                 </span>
                             </div>
                             <div class="flex-grow">
-                                <p class="text-gray-500 text-sm">Installed {{$lastActiveTimeBox}}</p>
-                                @if($accountStats['data']['status']['online'] == 'online')
-                                    <p class="flex text-lg font-bold items-center">{{$accountStats['data']['status']['online']}}<span class="w-2 h-2 rounded-full ml-3 bg-green-400"></span><p>
+                                <p class="text-gray-500 text-sm">Miner Status</p>
+                                @if($minerStatus == 'online')
+                                    <p class="flex text-lg font-bold items-center">{{$minerStatus}}<span class="w-2 h-2 rounded-full ml-3 bg-green-400"></span><p>
                                 @else
-                                <span class="flex items-center">{{$accountStats['data']['status']['online']}}<span class="block w-2 h-2 rounded-full ml-3 bg-red-400"></span><span>
+                                <span class="flex items-center">{{$minerStatus}}<span class="block w-2 h-2 rounded-full ml-3 bg-red-400"></span><span>
                                 @endif
                             </div>
                         </div>
@@ -39,12 +39,12 @@
                             </div>
                             <div class="flex-grow">
                                 <p class="text-gray-500 text-sm">Transmit Scale</p>
-                                @if(round($accountStats['data']['reward_scale'], 2) >= 0.85)
-                                    <span class="flex text-lg font-bold items-center"><span class="w-2 h-2 rounded-full mr-3 bg-green-400"></span>{{ round($accountStats['data']['reward_scale'], 2) }}</span>
-                                @elseif(round($accountStats['data']['reward_scale'], 2) >= 0.45)
-                                    <span class="flex text-lg font-bold items-center"><span class="w-2 h-2 rounded-full mr-3 bg-orange-400"></span>{{ round($accountStats['data']['reward_scale'], 2) }}</span>
+                                @if(round($minerScale, 2) >= 0.85)
+                                    <span class="flex text-lg font-bold items-center"><span class="w-2 h-2 rounded-full mr-3 bg-green-400"></span>{{ round($minerScale, 2) }}</span>
+                                @elseif(round($minerScale, 2) >= 0.45)
+                                    <span class="flex text-lg font-bold items-center"><span class="w-2 h-2 rounded-full mr-3 bg-orange-400"></span>{{ round($minerScale, 2) }}</span>
                                 @else
-                                    <span class="flex text-lg font-bold items-center"><span class="w-2 h-2 rounded-full mr-3 bg-red-400"></span>{{ round($accountStats['data']['reward_scale'], 2) }}</span>
+                                    <span class="flex text-lg font-bold items-center"><span class="w-2 h-2 rounded-full mr-3 bg-red-400"></span>{{ round($minerScale, 2) }}</span>
                                 @endif
                             </div>
                         </div>
@@ -64,7 +64,7 @@
                             <div class="flex-grow">
                                 <p class="text-gray-500 text-sm">Hotspot Location</p>
                                 <div class="flex items-center">
-                                    <p class="text-lg font-bold">{{ $accountStats['data']['geocode']['long_city'] }}</p>
+                                    <p class="text-lg font-bold">{{ $minerCity }}</p>
                                 </div>
                             </div>
                         </div>

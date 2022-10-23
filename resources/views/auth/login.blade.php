@@ -2,7 +2,7 @@
     <x-auth-card>
         <x-slot name="logo">
             <a href="/">
-                <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
+                <img class="w-20 h-20 rounded-md" src="{{asset('images/logo.jpg')}}"/>
             </a>
         </x-slot>
 
@@ -19,14 +19,14 @@
             <div>
                 <x-label for="email" :value="__('Email')" />
 
-                <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus />
+                <x-input id="email" class="block border border-gray-200 mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus />
             </div>
 
             <!-- Password -->
             <div class="mt-4">
                 <x-label for="password" :value="__('Password')" />
 
-                <x-input id="password" class="block mt-1 w-full"
+                <x-input id="password" class="block border border-gray-200 mt-1 w-full"
                                 type="password"
                                 name="password"
                                 required autocomplete="current-password" />
@@ -40,15 +40,15 @@
                 </label>
             </div>
 
-            <div class="flex items-center justify-end mt-4">
+            <div class="flex items-center justify-start mt-4">
                 @if (Route::has('password.request'))
-                    <a class="underline text-sm text-gray-600 hover:text-gray-900" href="{{ route('password.request') }}">
+                    <a class="underline hidden text-sm text-gray-600 hover:text-gray-900" href="{{ route('password.request') }}">
                         {{ __('Forgot your password?') }}
                     </a>
                 @endif
 
-                <x-button class="ml-3">
-                    {{ __('Log in') }}
+                <x-button class="w-full text-center">
+                    {{ __('Log in to Dashboard') }}
                 </x-button>
             </div>
         </form>

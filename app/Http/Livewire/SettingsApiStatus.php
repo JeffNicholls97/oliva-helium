@@ -32,7 +32,7 @@ class SettingsApiStatus extends Component
 
     public function render()
     {
-        $this->checkCoinStatus();
+        //$this->checkCoinStatus();
         return view('livewire.settings-api-status');
     }
 }

@@ -20,6 +20,14 @@ return new class extends Migration
             $table->string('email_address');
             $table->string('housing_address');
             $table->string('address_key');
+            $table->string('miner_name');
+            $table->string('miner_city');
+            $table->string('miner_status');
+            $table->string('miner_scale');
+            $table->float('seven_day_reward');
+            $table->float('fourteen_day_reward');
+            $table->float('thirty_day_reward');
+            $table->float('yearly_reward');
             $table->boolean('cash');
             $table->string('account_image')->nullable();
             $table->timestamps();

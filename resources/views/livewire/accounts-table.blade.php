@@ -1,51 +1,80 @@
 <div class="flex-grow h-full">
-    <div>
-        <div class="w-72 flex items-center gap-2">
-            <div class="w-full" wire:ignore>
-                <div class="relative">
-                    <input type="hidden" name="date" x-ref="date">
-                    <input
-                        type="text"
-                        readonly
-                        id="datepicker"
-                        class="w-full cursor-pointer bg-gray-100 pl-4 pr-10 h-12 leading-none rounded-lg border border-gray-200 focus:outline-none focus:shadow-outline text-gray-600 font-medium"
-                        placeholder="Select date">
+    <div class="flex mb-5 justify-between items-center">
+        <div class="flex w-1/2 items-center gap-3">
+            <div class="w-96 flex items-center gap-2">
+                <div class="w-full" wire:ignore>
+                    <div class="relative">
+                        <input type="hidden" name="date" x-ref="date">
+                        <input
+                            type="text"
+                            readonly
+                            id="datepicker"
+                            class="w-full cursor-pointer bg-gray-100 pl-4 pr-10 h-12 leading-none rounded-lg border border-gray-200 focus:outline-none focus:shadow-outline text-gray-600 font-medium"
+                            placeholder="Select date">
 
-                    <div class="absolute top-0 right-0 px-3 py-2">
-                        <svg class="h-6 w-6 text-gray-400"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                        </svg>
+                        <div class="absolute top-0 right-0 px-3 py-2">
+                            <svg class="h-6 w-6 text-gray-400"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                            </svg>
+                        </div>
                     </div>
+                    <script>
+                        const picker = new easepick.create({
+                            element: document.getElementById('datepicker'),
+                            css: [
+                                'https://cdn.jsdelivr.net/npm/@easepick/core@1.2.0/dist/index.css',
+                                'https://cdn.jsdelivr.net/npm/@easepick/range-plugin@1.2.0/dist/index.css',
+                                'https://cdn.jsdelivr.net/npm/@easepick/preset-plugin@1.2.0/dist/index.css',
+                            ],
+                            autoApply: false,
+                            plugins: [RangePlugin, PresetPlugin],
+                            setup(picker) {
+                                picker.on('select', (e) => {
+                                    let startDate =  picker.getStartDate();
+                                    let endDate =  picker.getEndDate();
+                                @this.set('startDate', startDate.format('YYYY-MM-DD'));
+                                @this.set('endDate', endDate.format('YYYY-MM-DD'));
+                                });
+                            },
+                            RangePlugin: {
+                                tooltip: true,
+                            },
+                            PresetPlugin: {
+                                position: 'left',
+                            },
+                        });
+                    </script>
                 </div>
-                <script>
-                    const picker = new easepick.create({
-                        element: document.getElementById('datepicker'),
-                        css: [
-                            'https://cdn.jsdelivr.net/npm/@easepick/core@1.2.0/dist/index.css',
-                            'https://cdn.jsdelivr.net/npm/@easepick/range-plugin@1.2.0/dist/index.css',
-                            'https://cdn.jsdelivr.net/npm/@easepick/preset-plugin@1.2.0/dist/index.css',
-                        ],
-                        autoApply: false,
-                        plugins: [RangePlugin, PresetPlugin],
-                        setup(picker) {
-                            picker.on('select', (e) => {
-                                let startDate =  picker.getStartDate();
-                                let endDate =  picker.getEndDate();
-                            @this.set('startDate', startDate.format('YYYY-MM-DD'));
-                            @this.set('endDate', endDate.format('YYYY-MM-DD'));
-                            });
-                        },
-                        RangePlugin: {
-                            tooltip: true,
-                        },
-                        PresetPlugin: {
-                            position: 'left',
-                        },
-                    });
-                </script>
+                <input wire:model="startDate" type="hidden">
+                <input wire:model="endDate" type="hidden">
             </div>
-            <input wire:model="startDate" type="hidden">
-            <input wire:model="endDate" type="hidden">
+            @if($cashTotal)
+                @php
+                    $arr = [];
+                    foreach ($cashTotal as $key => $transaction) {
+                        array_push($arr, $transaction['data']['sum']);
+                        $estimatedTotal = array_sum($arr);
+                        $estimatedTotalFinalDivide = $estimatedTotal / 100000000;
+                        $estimatedTotalFinal = round($estimatedTotalFinalDivide, 2);
+                    }
+                @endphp
+                <div x-data="{ turnCurrencyMiner: true }" class="w-96 flex items-center relative pl-12 bg-gray-100 pr-2 h-12 leading-none rounded-lg shadow-sm">
+                    <div class="w-7 h-7 absolute top-1/2 -translate-y-1/2 left-2 bg-gray-200 rounded-lg flex items-center justify-center">
+                        <svg x-show="turnCurrencyMiner == true" class="w-3 h-3 fill-current text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M144 160.4c0-35.5 28.8-64.4 64.4-64.4c6.9 0 13.8 1.1 20.4 3.3l81.2 27.1c16.8 5.6 34.9-3.5 40.5-20.2s-3.5-34.9-20.2-40.5L249 38.6c-13.1-4.4-26.8-6.6-40.6-6.6C137.5 32 80 89.5 80 160.4V224H64c-17.7 0-32 14.3-32 32s14.3 32 32 32H80v44.5c0 17.4-4.7 34.5-13.7 49.4L36.6 431.5c-5.9 9.9-6.1 22.2-.4 32.2S52.5 480 64 480H320c17.7 0 32-14.3 32-32s-14.3-32-32-32H120.5l.7-1.1C136.1 390 144 361.5 144 332.5V288H256c17.7 0 32-14.3 32-32s-14.3-32-32-32H144V160.4z"/></svg>
+                        <svg x-show="turnCurrencyMiner == false" :class="turnCurrencyMiner ? 'rotate-180' : ''" class="w-3 h-3 duration-300 fill-current text-gray-300" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 193 193" style="enable-background:new 0 0 193 193;" xml:space="preserve">
+                        <path class="st0" d="M122.2,50.2c5.6-5.6,14.8-5.6,20.4,0c5.6,5.6,5.6,14.8,0,20.4c-3.3,3.3-7.7,4.7-12.2,4.1c-0.2,0-0.4,0-0.7,0  c-1.3-0.2-2.7,0-4.1,0.6c-1.9,0.9-3.2,2.4-3.9,4.2c-0.7,1.8-0.6,3.8,0.2,5.6c4.8,10.4,2.6,23-5.6,31.1c-8.2,8.2-20.7,10.4-31.1,5.6  c-1.9-0.9-3.9-0.9-5.7-0.2c-1.8,0.7-3.3,2-4.1,3.8c-0.5,1.2-0.8,2.4-0.7,3.7c0,0.2,0,0.5,0,0.7c0.8,4.6-0.8,9.3-4,12.6  c-5.6,5.6-14.8,5.6-20.4,0c-2.7-2.7-4.2-6.3-4.2-10.2c0-3.8,1.5-7.5,4.2-10.2c3.3-3.3,7.7-4.7,12.2-4.1c0.1,0,0.1,0,0.2,0  c0.5,0.1,1,0.2,1.5,0.2c1.1,0,2.1-0.2,3.1-0.7c1.9-0.9,3.2-2.4,3.8-4.1c0.7-1.8,0.7-3.9-0.2-5.8c-4.8-10.5-2.6-23,5.6-31.1  c8.2-8.2,20.7-10.4,31.1-5.6c1.8,0.9,3.9,0.9,5.7,0.2c1.8-0.7,3.3-2,4.2-3.8c0.7-1.4,0.8-3,0.6-4.5v0  C117.4,58.2,118.9,53.5,122.2,50.2z M107.9,107.8c6.2-6.2,6.2-16.3,0-22.6c-6.2-6.2-16.3-6.2-22.6,0c-6.2,6.2-6.2,16.3,0,22.6  C91.6,114,101.7,114,107.9,107.8z M96.5,0C149.8,0,193,43.2,193,96.5c0,53.3-43.2,96.5-96.5,96.5S0,149.8,0,96.5  C0,43.2,43.2,0,96.5,0z M147.9,76c8.5-8.5,8.5-22.3,0-30.9c-8.5-8.5-22.3-8.5-30.9,0c-3.2,3.2-5.1,7.1-6,11.1  c-15.5-5.8-33.2-2.1-45,9.7C54.2,77.7,50.5,95.5,56.4,111c-4.1,0.8-8,2.8-11.2,6c-8.5,8.5-8.5,22.3,0,30.9c8.5,8.5,22.3,8.5,30.9,0  c3.2-3.2,5.2-7.2,6-11.3c4.8,1.8,9.8,2.7,14.8,2.7c11.1,0,22-4.3,30.1-12.4c11.8-11.8,15.5-29.4,9.8-44.8  C140.8,81.1,144.7,79.1,147.9,76z"></path>
+                    </svg>
+                    </div>
+                    <span class="text-gray-600" x-show="turnCurrencyMiner == false">{{ number_format($estimatedTotalFinal, 3) }}</span>
+                    <span class="text-gray-600" x-show="turnCurrencyMiner == true">{{ number_format($estimatedTotalFinal, 2) * $heliumPrice }}</span>
+                    <button x-on:click="turnCurrencyMiner = !turnCurrencyMiner" class="w-7 h-7 absolute group top-1/2 -translate-y-1/2 right-2 rounded-lg flex items-center justify-center">
+                        <svg :class="turnCurrencyMiner ? 'rotate-180' : ''" class="w-3 group-hover:text-black h-3 duration-300 fill-current text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M0 224c0 17.7 14.3 32 32 32s32-14.3 32-32c0-53 43-96 96-96H320v32c0 12.9 7.8 24.6 19.8 29.6s25.7 2.2 34.9-6.9l64-64c12.5-12.5 12.5-32.8 0-45.3l-64-64c-9.2-9.2-22.9-11.9-34.9-6.9S320 19.1 320 32V64H160C71.6 64 0 135.6 0 224zm512 64c0-17.7-14.3-32-32-32s-32 14.3-32 32c0 53-43 96-96 96H192V352c0-12.9-7.8-24.6-19.8-29.6s-25.7-2.2-34.9 6.9l-64 64c-12.5 12.5-12.5 32.8 0 45.3l64 64c9.2 9.2 22.9 11.9 34.9 6.9s19.8-16.6 19.8-29.6V448H352c88.4 0 160-71.6 160-160z"></path></svg></button>
+                </div>
+            @endif
+        </div>
+        <div class="flex items-center gap-3">
+            <livewire:accounts-add />
+            <livewire:email-account :accounts="$accounts"/>
         </div>
     </div>
 
@@ -79,8 +108,11 @@
                                 <img class="rounded-full object-cover w-10 h-10" src="{{asset($account->account_image)}}" alt="">
                             </div>
                             <div class="flex flex-col">
-                                <span>{{ $account->first_name }} {{ $account->last_name }}</span>
-                                <span class="text-sm text-gray-400">{{$account->email_address}}</span>
+                                @php
+                                    $minerName = str_replace("-", " ", $account->miner_name);
+                                @endphp
+                                <span class="capitalize">{{ $minerName }}</span>
+                                <span class="text-sm text-gray-400">{{ $account->first_name }} {{ $account->last_name }} - {{$account->email_address}}</span>
                             </div>
                         </div>
                     </div>
@@ -154,17 +186,15 @@
                             <div class="w-full gap-5 flex items-center justify-center">
                                 @if ($profilePicture)
                                     <img class="h-32 min-w-[8rem] min-h-[8rem] object-cover w-32 rounded-lg" src="{{ asset($profilePicture) }}">
+                                @else
+                                    <img class="h-32 min-w-[8rem] min-h-[8rem] object-cover w-32 rounded-lg" src="{{ $profilePictureEdit->temporaryUrl() }}">
                                 @endif
                                 <label class="w-full h-32 flex flex-col items-center justify-center px-4 py-6 bg-white text-blue rounded-lg border border-blue cursor-pointer hover:bg-gray-100 hover:text-black">
                                     <svg class="w-8 h-8 fill-current text-gray-400" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                                         <path d="M16.88 9.1A4 4 0 0 1 16 17H5a5 5 0 0 1-1-9.9V7a3 3 0 0 1 4.52-2.59A4.98 4.98 0 0 1 17 8c0 .38-.04.74-.12 1.1zM11 11h3l-4-4-4 4h3v3h2v-3z" />
                                     </svg>
-                                    @if ($profilePicture)
-                                        <span class="mt-2 text-sm text-gray-400 text-center">Change Image</span>
-                                    @else
-                                        <span class="mt-2 text-sm text-gray-400 text-center">Upload Image</span>
-                                    @endif
-                                    <input type='file' wire:model="profilePicture" class="hidden" />
+                                    <span class="mt-2 text-sm text-gray-400 text-center">Change Image</span>
+                                    <input type='file' wire:model="profilePictureEdit" class="hidden" />
                                 </label>
                             </div>
                             <div class="flex mt-10 relative items-center gap-5">
@@ -198,8 +228,8 @@
                                 <div class="w-full relative">
                                     <ul class="grid gap-6 w-full md:grid-cols-4">
                                         <li class="col-span-2">
-                                            <input type="radio" wire:model="cash" id="react-option" value="1" class="hidden peer">
-                                            <label for="react-option" class="inline-flex justify-between items-center p-5 w-full text-gray-500 bg-white rounded-lg border border-gray-200 cursor-pointer peer-checked:border-red-600 hover:text-gray-600 peer-checked:text-gray-600 hover:bg-gray-50">
+                                            <input type="radio" wire:model.lazy="cash" id="react-option-1" value="1" class="hidden peer">
+                                            <label for="react-option-1" class="inline-flex justify-between items-center p-5 w-full text-gray-500 bg-white rounded-lg border border-gray-200 cursor-pointer peer-checked:border-red-600 hover:text-gray-600 peer-checked:text-gray-600 hover:bg-gray-50">
                                                 <div class="block">
                                                     <svg class="fill-current mb-2 text-gray-400 w-7 h-7" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Pro 6.1.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M535 7.03C544.4-2.343 559.6-2.343 568.1 7.029L632.1 71.02C637.5 75.52 640 81.63 640 87.99C640 94.36 637.5 100.5 632.1 104.1L568.1 168.1C559.6 178.3 544.4 178.3 535 168.1C525.7 159.6 525.7 144.4 535 135L558.1 111.1L384 111.1C370.7 111.1 360 101.2 360 87.99C360 74.74 370.7 63.99 384 63.99L558.1 63.1L535 40.97C525.7 31.6 525.7 16.4 535 7.03V7.03zM104.1 376.1L81.94 400L255.1 399.1C269.3 399.1 279.1 410.7 279.1 423.1C279.1 437.2 269.3 447.1 255.1 447.1L81.95 448L104.1 471C114.3 480.4 114.3 495.6 104.1 504.1C95.6 514.3 80.4 514.3 71.03 504.1L7.029 440.1C2.528 436.5-.0003 430.4 0 423.1C0 417.6 2.529 411.5 7.03 407L71.03 343C80.4 333.7 95.6 333.7 104.1 343C114.3 352.4 114.3 367.6 104.1 376.1H104.1zM95.1 64H337.9C334.1 71.18 332 79.34 332 87.1C332 116.7 355.3 139.1 384 139.1L481.1 139.1C484.4 157.5 494.9 172.5 509.4 181.9C511.1 184.3 513.1 186.6 515.2 188.8C535.5 209.1 568.5 209.1 588.8 188.8L608 169.5V384C608 419.3 579.3 448 544 448H302.1C305.9 440.8 307.1 432.7 307.1 423.1C307.1 395.3 284.7 371.1 255.1 371.1L158.9 372C155.5 354.5 145.1 339.5 130.6 330.1C128.9 327.7 126.9 325.4 124.8 323.2C104.5 302.9 71.54 302.9 51.23 323.2L31.1 342.5V128C31.1 92.65 60.65 64 95.1 64V64zM95.1 192C131.3 192 159.1 163.3 159.1 128H95.1V192zM544 384V320C508.7 320 480 348.7 480 384H544zM319.1 352C373 352 416 309 416 256C416 202.1 373 160 319.1 160C266.1 160 223.1 202.1 223.1 256C223.1 309 266.1 352 319.1 352z"></path></svg>
                                                     <div class="w-full text-lg font-semibold">Cash</div>
@@ -208,8 +238,8 @@
                                             </label>
                                         </li>
                                         <li class="col-span-2">
-                                            <input type="radio" wire:model="cash" id="flowbite-option" value="0" class="hidden peer">
-                                            <label for="flowbite-option" class="inline-flex justify-between items-center p-5 w-full text-gray-500 bg-white rounded-lg border border-gray-200 cursor-pointer peer-checked:border-red-600 hover:text-gray-600 peer-checked:text-gray-600 hover:bg-gray-50">
+                                            <input type="radio" wire:model.lazy="cash" id="flowbite-option-1" value="0" class="hidden peer">
+                                            <label for="flowbite-option-1" class="inline-flex justify-between items-center p-5 w-full text-gray-500 bg-white rounded-lg border border-gray-200 cursor-pointer peer-checked:border-red-600 hover:text-gray-600 peer-checked:text-gray-600 hover:bg-gray-50">
                                                 <div class="block">
                                                     <svg class="fill-current mb-2 text-gray-400 w-7 h-7" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 193 193" style="enable-background:new 0 0 193 193;" xml:space="preserve"><path class="st0" d="M122.2,50.2c5.6-5.6,14.8-5.6,20.4,0c5.6,5.6,5.6,14.8,0,20.4c-3.3,3.3-7.7,4.7-12.2,4.1c-0.2,0-0.4,0-0.7,0  c-1.3-0.2-2.7,0-4.1,0.6c-1.9,0.9-3.2,2.4-3.9,4.2c-0.7,1.8-0.6,3.8,0.2,5.6c4.8,10.4,2.6,23-5.6,31.1c-8.2,8.2-20.7,10.4-31.1,5.6  c-1.9-0.9-3.9-0.9-5.7-0.2c-1.8,0.7-3.3,2-4.1,3.8c-0.5,1.2-0.8,2.4-0.7,3.7c0,0.2,0,0.5,0,0.7c0.8,4.6-0.8,9.3-4,12.6  c-5.6,5.6-14.8,5.6-20.4,0c-2.7-2.7-4.2-6.3-4.2-10.2c0-3.8,1.5-7.5,4.2-10.2c3.3-3.3,7.7-4.7,12.2-4.1c0.1,0,0.1,0,0.2,0  c0.5,0.1,1,0.2,1.5,0.2c1.1,0,2.1-0.2,3.1-0.7c1.9-0.9,3.2-2.4,3.8-4.1c0.7-1.8,0.7-3.9-0.2-5.8c-4.8-10.5-2.6-23,5.6-31.1  c8.2-8.2,20.7-10.4,31.1-5.6c1.8,0.9,3.9,0.9,5.7,0.2c1.8-0.7,3.3-2,4.2-3.8c0.7-1.4,0.8-3,0.6-4.5v0  C117.4,58.2,118.9,53.5,122.2,50.2z M107.9,107.8c6.2-6.2,6.2-16.3,0-22.6c-6.2-6.2-16.3-6.2-22.6,0c-6.2,6.2-6.2,16.3,0,22.6  C91.6,114,101.7,114,107.9,107.8z M96.5,0C149.8,0,193,43.2,193,96.5c0,53.3-43.2,96.5-96.5,96.5S0,149.8,0,96.5  C0,43.2,43.2,0,96.5,0z M147.9,76c8.5-8.5,8.5-22.3,0-30.9c-8.5-8.5-22.3-8.5-30.9,0c-3.2,3.2-5.1,7.1-6,11.1  c-15.5-5.8-33.2-2.1-45,9.7C54.2,77.7,50.5,95.5,56.4,111c-4.1,0.8-8,2.8-11.2,6c-8.5,8.5-8.5,22.3,0,30.9c8.5,8.5,22.3,8.5,30.9,0  c3.2-3.2,5.2-7.2,6-11.3c4.8,1.8,9.8,2.7,14.8,2.7c11.1,0,22-4.3,30.1-12.4c11.8-11.8,15.5-29.4,9.8-44.8  C140.8,81.1,144.7,79.1,147.9,76z"></path></svg>
                                                     <div class="w-full text-lg font-semibold">HNT</div>

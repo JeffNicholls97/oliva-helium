@@ -14,6 +14,9 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         Commands\GetHeliumPriceHourly::class,
+        Commands\GetTotalMiners::class,
+        Commands\GetMinerName::class,
+        Commands\GetMinerTopStats::class,
     ];
 
     /**
@@ -25,6 +28,15 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('heliumprice:cron')
+            ->everyMinute()->appendOutputTo(storage_path('logs/scheduler.log'));
+
+        $schedule->command('totalminers:cron')
+            ->everyMinute()->appendOutputTo(storage_path('logs/scheduler.log'));
+
+        $schedule->command('minername:cron')
+            ->everyMinute()->appendOutputTo(storage_path('logs/scheduler.log'));
+
+        $schedule->command('minertopstats:cron')
             ->everyMinute()->appendOutputTo(storage_path('logs/scheduler.log'));
     }
 

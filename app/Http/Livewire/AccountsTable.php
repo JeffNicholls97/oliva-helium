@@ -11,6 +11,7 @@ use Livewire\WithFileUploads;
 
 class AccountsTable extends Component
 {
+    use WithFileUploads;
     public $accounts;
     public $currentCoinValue;
     public $startDate;
@@ -26,7 +27,9 @@ class AccountsTable extends Component
     public $address;
     public $emailAddress;
     public $accountKey;
-    public $cash = 1;
+    public $cash;
+    public $cashTotal = [];
+    public $coinvalue;
 
     public function renderTable()
     {
@@ -37,40 +40,35 @@ class AccountsTable extends Component
     {
 //        $this->isLoadingBucket = true;
         if($this->startDate == null && $this->endDate == null) {
-            $this->startDate = Carbon::now()->subDays(30)->toDateString();
+            $this->startDate = Carbon::now()->subDays(6)->toDateString();
             $this->endDate = Carbon::now()->addDays(1)->toDateString();
         }
 
         $this->bucketArray = [];
+        $this->cashTotal = [];
         foreach($this->accounts as $account) {
             $addressKey = $account->address_key;
 
             $response = Http::withHeaders([
                 'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36',
-            ])->retry(3)->get('https://api.helium.io/v1/hotspots/'. $addressKey .'/rewards/sum?max_time='. $this->endDate .'&min_time='. $this->startDate .'');
+            ])->retry(3, 5000)->get('https://api.helium.io/v1/hotspots/'. $addressKey .'/rewards/sum?max_time='. $this->endDate .'&min_time='. $this->startDate .'');
 
             if($response->status() == 200) {
                 $fomrattedResponse = $response->collect();
                 array_push($this->bucketArray, $fomrattedResponse);
+                if($account->cash){
+                    array_push($this->cashTotal, $fomrattedResponse);
+                }
             }
         }
-//        $this->isLoadingBucket = false;
+
     }
 
 
     public function currentValue()
     {
-//        $coinResponse = Http::withHeaders([
-//            'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36',
-//        ])->get('https://api.coingecko.com/api/v3/simple/price?ids=helium&vs_currencies=gbp');
-//
-//        if ($coinResponse->status() == 200){
-//            $this->currentCoinValue = number_format($coinResponse['helium']['gbp'], 2);
-//        }
-
         $settings = Setting::query()->where('id', 1)->first();
         $this->heliumPrice = $settings->helium_price_gbp;
-
     }
 
     public function deleteAccountData($id)
@@ -100,15 +98,18 @@ class AccountsTable extends Component
 
     public function saveAccountData()
     {
-//        $filenameWithExt = $this->profilePicture->getClientOriginalName();
-//        $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
-//        $extension = $this->profilePicture->getClientOriginalExtension();
-//        $fileNameToStore = $filename.'_'.time().'.'.$extension;
-//        $path = $this->profilePicture->storeAs(public_path('images'),$fileNameToStore ,'real_public' );
-
+        if (str_contains($this->profilePicture, '/public/images/')) {
+            $path = $this->profilePicture;
+        }else {
+            $filenameWithExtEdit = $this->profilePicture->getClientOriginalName();
+            $filename = pathinfo($filenameWithExtEdit, PATHINFO_FILENAME);
+            $extension = $this->profilePicture->getClientOriginalExtension();
+            $fileNameToStore = $filename.'_'.time().'.'.$extension;
+            $path = $this->profilePicture->storeAs(public_path('images'),$fileNameToStore ,'real_public' );
+        }
 
         $this->editData->update([
-            'account_image' => 'fix',
+            'account_image' => $path,
             'first_name' => $this->firstName,
             'last_name' => $this->lastName,
             'housing_address' => $this->address,

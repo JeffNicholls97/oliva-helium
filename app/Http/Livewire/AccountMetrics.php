@@ -21,6 +21,9 @@ class AccountMetrics extends Component
     public $maxTime;
     public $coinvalue;
     public $totalInvoices;
+    public $minerCity;
+    public $minerScale;
+    public $minerStatus;
 
     public function mount($accountProfile)
     {
@@ -41,42 +44,19 @@ class AccountMetrics extends Component
 
     public function getCurrentHntCoinValue()
     {
-//        $coinResponse = Http::withHeaders([
-//            'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36',
-//        ])->get('https://api.coingecko.com/api/v3/simple/price?ids=helium&vs_currencies=gbp');
-//
-//        if ($coinResponse->status() == 200){
-//            $this->coinvalue = $coinResponse->collect();
-//        }else {
-//            $coinMarketResponse = Http::withHeaders([
-//                'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36',
-//            ])->get('https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?slug=helium&convert=GBP&CMC_PRO_API_KEY=1a943e6d-687b-4bc7-b722-eaf3c7634788');
-//
-//            if($coinMarketResponse->status() == 200) {
-//                $this->coinvalue = $coinMarketResponse->collect();
-//            }
-//        }
-
         $settings = Setting::query()->where('id', 1)->first();
         $this->coinvalue = $settings->helium_price_gbp;
     }
 
     public function requestHotspotStats()
     {
-        $response = Http::withHeaders([
-            'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36',
-        ])->get('https://api.helium.io/v1/hotspots/'. $this->address['address_key'] .'');
+        $settings = Accounts::query()->where('id', $this->account)->first();
 
-        if ($response->status() == 200){
-            $this->accountStats = $response->collect();
+        $this->minerCity = $settings->miner_city;
+        $this->minerStatus = $settings->miner_status;
+        $this->minerScale = (float) $settings->miner_scale;
 
-            $date = date("Y-m-d g:i:s a", strtotime($this->accountStats['data']['timestamp_added']));
-            $dateNew = Carbon::parse($date)->diffForHumans();
-
-
-            $this->lastActiveTimeBox = $dateNew;
-            $this->isLoadingAccountStats = false;
-        }
+        $this->isLoadingAccountStats = false;
     }
 
     public function render()

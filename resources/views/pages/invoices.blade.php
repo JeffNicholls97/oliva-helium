@@ -1,5 +1,8 @@
 @extends('layouts.main')
+@push('meta')
+    <title>Oliva - Invoices</title>
+@endpush
 
 @section('content')
-<h1>Invoice Page</h1>
+    <livewire:invoices-table />
 @endsection

@@ -16,33 +16,23 @@ class TopBarAccountInfo extends Component
 
     public function AccountInformationStats()
     {
-        $response = Http::withHeaders([
-            'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36',
-        ])->get('https://api.helium.io/v1/accounts/14Ve5BGUKRGxiXkqm329KRs3JepWpuBCBqfwbNZdGMipjavoyq6');
-
-//        $coinResponse = Http::withHeaders([
-//            'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36',
-//        ])->get('https://api.coingecko.com/api/v3/simple/price?ids=helium&vs_currencies=gbp');
 
         $settings = Setting::query()->where('id', 1)->first();
         $this->heliumPrice = $settings->helium_price_gbp;
 
-        if ($response->status() == 200){
-            $heliumAccount = $response->collect();
-            $this->hotspotCount = $heliumAccount['data']['hotspot_count'];
+        $this->hotspotCount = $settings->total_miners;
 
-            $numberData = (int)$heliumAccount['data']['balance'];
-            $convertedNumber = $numberData / 100000000;
-            $this->hotspotBalance = number_format($convertedNumber, 2);
+        $numberData = $settings->total_account_hnt;
+        $convertedNumber = $numberData / 100000000;
+        $this->hotspotBalance = number_format($convertedNumber, 2);
 
-            $currentRate = number_format($this->heliumPrice, 2);
-            $rateFloat = floatval($currentRate);
+        $currentRate = number_format($this->heliumPrice, 2);
+        $rateFloat = floatval($currentRate);
 
 
-            $this->hotspotBalanceGbp = $numberData * $rateFloat / 100000000 ;
+        $this->hotspotBalanceGbp = $numberData * $rateFloat / 100000000 ;
 
-            $this->isLoadingAccount = false;
-        }
+        $this->isLoadingAccount = false;
 
     }
 
