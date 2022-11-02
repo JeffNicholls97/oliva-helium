@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Http;
 use Livewire\Component;
 use App\Models\Accounts;
 use App\Models\Setting;
+use App\Models\Invoice;
 use Livewire\WithFileUploads;
 
 class AccountsTable extends Component
@@ -30,38 +31,74 @@ class AccountsTable extends Component
     public $cash;
     public $cashTotal = [];
     public $coinvalue;
+    public $invoices;
+    public $invoiceDate;
+    public $returnDate;
 
     public function renderTable()
     {
         $this->accounts = Accounts::all();
     }
 
-    public function overallHeliumUsingCalender()
+//    public function overallHeliumUsingCalender()
+//    {
+////        $this->isLoadingBucket = true;
+//        if($this->startDate == null && $this->endDate == null) {
+//            $this->startDate = Carbon::now()->subDays(1)->toDateString();
+//            $this->endDate = Carbon::now()->addDays(1)->toDateString();
+//        }
+//
+//        $this->bucketArray = [];
+//        $this->cashTotal = [];
+//        foreach($this->accounts as $account) {
+//            $addressKey = $account->address_key;
+//
+//            $response = Http::withHeaders([
+//                'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36',
+//            ])->retry(3, 5000)->get('https://api.helium.io/v1/hotspots/'. $addressKey .'/rewards/sum?max_time='. $this->endDate .'&min_time='. $this->startDate .'');
+//
+//            if($response->status() == 200) {
+//                $fomrattedResponse = $response->collect();
+//                array_push($this->bucketArray, $fomrattedResponse);
+//                if($account->cash){
+//                    array_push($this->cashTotal, $fomrattedResponse);
+//                }
+//            }
+//        }
+//
+//    }
+
+    public function invoiceHelium()
     {
-//        $this->isLoadingBucket = true;
-        if($this->startDate == null && $this->endDate == null) {
-            $this->startDate = Carbon::now()->subDays(6)->toDateString();
-            $this->endDate = Carbon::now()->addDays(1)->toDateString();
+        $invoice_date = Invoice::select('invoice_date')->get();
+
+        $this->invoiceDate = [];
+        foreach($invoice_date as $date) {
+            $newDate = Carbon::parse($date->invoice_date)->format('F - Y');
+
+            $this->invoiceDate[] = $newDate;
         }
+
+    }
+
+    public function showTotals()
+    {
+
+        if($this->returnDate == null) {
+            $this->returnDate = Carbon::now()->subMonth(1)->format('F - Y');
+        }
+
+        $splitDate = explode(" - ", $this->returnDate);
+
+        $invoiceData = Invoice::whereYear('invoice_date', '=', $splitDate[1])->whereMonth('invoice_date', '=', Carbon::parse($splitDate[0])->format('m'))->get();
 
         $this->bucketArray = [];
-        $this->cashTotal = [];
-        foreach($this->accounts as $account) {
-            $addressKey = $account->address_key;
-
-            $response = Http::withHeaders([
-                'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36',
-            ])->retry(3, 5000)->get('https://api.helium.io/v1/hotspots/'. $addressKey .'/rewards/sum?max_time='. $this->endDate .'&min_time='. $this->startDate .'');
-
-            if($response->status() == 200) {
-                $fomrattedResponse = $response->collect();
-                array_push($this->bucketArray, $fomrattedResponse);
-                if($account->cash){
-                    array_push($this->cashTotal, $fomrattedResponse);
-                }
+        if($invoiceData){
+            foreach($invoiceData as $data){
+                $this->bucketArray['data'] = $data['invoice_data'];
+                $this->bucketArray['accountId'] = $data['accounts_id'];
             }
         }
-
     }
 
 
@@ -126,7 +163,9 @@ class AccountsTable extends Component
     {
         $this->renderTable();
         $this->currentValue();
-        $this->overallHeliumUsingCalender();
+        $this->invoiceHelium();
+        $this->showTotals();
+//        $this->overallHeliumUsingCalender();
         return view('livewire.accounts-table');
     }
 }

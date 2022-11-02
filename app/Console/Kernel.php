@@ -37,7 +37,7 @@ class Kernel extends ConsoleKernel
             ->everyMinute()->appendOutputTo(storage_path('logs/scheduler.log'));
 
         $schedule->command('minertopstats:cron')
-            ->everyMinute()->appendOutputTo(storage_path('logs/scheduler.log'));
+            ->daily()->appendOutputTo(storage_path('logs/scheduler.log'));
     }
 
     /**
