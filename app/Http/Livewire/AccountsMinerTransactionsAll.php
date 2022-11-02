@@ -75,6 +75,7 @@ class AccountsMinerTransactionsAll extends Component
                     $this->lastActiveTime = $transactionArray[0]['timestamp'];
                     $this->newTran = $transactionArray;
                 }elseif($responseNull['data']){
+
                     $noCursor = $responseNew->collect();
                     $this->lastActiveTime = $noCursor['data'][0]['timestamp'];
 

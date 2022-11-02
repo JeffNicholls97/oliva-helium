@@ -1,53 +1,13 @@
 <div class="flex-grow h-full">
     <div class="flex mb-5 justify-between items-center">
         <div class="flex w-1/2 items-center gap-3">
-            <div class="w-96 flex items-center gap-2">
-                <div class="w-full" wire:ignore>
-                    <div class="relative">
-                        <input type="hidden" name="date" x-ref="date">
-                        <input
-                            type="text"
-                            readonly
-                            id="datepicker"
-                            class="w-full cursor-pointer bg-gray-100 pl-4 pr-10 h-12 leading-none rounded-lg border border-gray-200 focus:outline-none focus:shadow-outline text-gray-600 font-medium"
-                            placeholder="Select date">
+            <select wire:model="returnDate">
+                @foreach(array_unique($invoiceDate) as $date)
+                    <option value="{{$date}}">{{ $date }}</option>
+                @endforeach
+            </select>
 
-                        <div class="absolute top-0 right-0 px-3 py-2">
-                            <svg class="h-6 w-6 text-gray-400"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                            </svg>
-                        </div>
-                    </div>
-                    <script>
-                        const picker = new easepick.create({
-                            element: document.getElementById('datepicker'),
-                            css: [
-                                'https://cdn.jsdelivr.net/npm/@easepick/core@1.2.0/dist/index.css',
-                                'https://cdn.jsdelivr.net/npm/@easepick/range-plugin@1.2.0/dist/index.css',
-                                'https://cdn.jsdelivr.net/npm/@easepick/preset-plugin@1.2.0/dist/index.css',
-                            ],
-                            autoApply: false,
-                            plugins: [RangePlugin, PresetPlugin],
-                            setup(picker) {
-                                picker.on('select', (e) => {
-                                    let startDate =  picker.getStartDate();
-                                    let endDate =  picker.getEndDate();
-                                @this.set('startDate', startDate.format('YYYY-MM-DD'));
-                                @this.set('endDate', endDate.format('YYYY-MM-DD'));
-                                });
-                            },
-                            RangePlugin: {
-                                tooltip: true,
-                            },
-                            PresetPlugin: {
-                                position: 'left',
-                            },
-                        });
-                    </script>
-                </div>
-                <input wire:model="startDate" type="hidden">
-                <input wire:model="endDate" type="hidden">
-            </div>
+            {{ $returnDate }}
             @if($cashTotal)
                 @php
                     $arr = [];
@@ -112,7 +72,7 @@
                                     $minerName = str_replace("-", " ", $account->miner_name);
                                 @endphp
                                 <span class="capitalize">{{ $minerName }}</span>
-                                <span class="text-sm text-gray-400">{{ $account->first_name }} {{ $account->last_name }} - {{$account->email_address}}</span>
+                                <span class="text-xs text-gray-400">{{ $account->first_name }} {{ $account->last_name }} - {{$account->email_address}}</span>
                             </div>
                         </div>
                     </div>
@@ -125,9 +85,6 @@
                         <div class="w-3/4 text-gray-400 truncate text-ellipsis text-sm">
                             {{ $account->address_key }}
                         </div>
-{{--                        <button x-clipboard.raw="{{ $account->address_key }}" class="w-10 account-key group cursor-pointer absolute top-0 h-10 flex duration-200 items-center justify-center bg-transparent hover:bg-black rounded-full right-0">--}}
-{{--                            <svg class="w-5 text-gray-300 group-hover:text-white fill-current h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Pro 6.1.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M384 96L384 0h-112c-26.51 0-48 21.49-48 48v288c0 26.51 21.49 48 48 48H464c26.51 0 48-21.49 48-48V128h-95.1C398.4 128 384 113.6 384 96zM416 0v96h96L416 0zM192 352V128h-144c-26.51 0-48 21.49-48 48v288c0 26.51 21.49 48 48 48h192c26.51 0 48-21.49 48-48L288 416h-32C220.7 416 192 387.3 192 352z"/></svg>--}}
-{{--                        </button>--}}
                     </div>
                     <div class="col-span-1 flex items-center">
                         <div class="w-full text-sm text-gray-400">
@@ -150,10 +107,10 @@
                     </div>
                     <div class="col-span-1 flex items-center">
                         <div class="w-full text-sm text-gray-400">
-                            @if($bucketArray)
-                                {{ $bucketArray[$loop->index]['data']['total'] }}
+                            @if($bucketArray['accountId'] == $account->id)
+                                true
                             @else
-                                <span>Choose Date Range</span>
+                                <span>No invoice for this month</span>
                             @endif
                         </div>
                     </div>
