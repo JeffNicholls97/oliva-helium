@@ -1,11 +1,11 @@
 <div class="flex-grow h-full">
     <div class="flex mb-5 justify-between items-center">
         <div class="flex w-1/2 items-center gap-3">
-            <select wire:model="returnDate">
-                @foreach(array_unique($invoiceDate) as $date)
-                    <option value="{{$date}}">{{ $date }}</option>
-                @endforeach
-            </select>
+{{--            <select wire:model="returnDate">--}}
+{{--                @foreach(array_unique($invoiceDate) as $date)--}}
+{{--                    <option value="{{$date}}">{{ $date }}</option>--}}
+{{--                @endforeach--}}
+{{--            </select>--}}
 
             {{ $returnDate }}
             @if($cashTotal)
@@ -106,13 +106,13 @@
                         </div>
                     </div>
                     <div class="col-span-1 flex items-center">
-                        <div class="w-full text-sm text-gray-400">
-                            @if($bucketArray['accountId'] == $account->id)
-                                true
-                            @else
-                                <span>No invoice for this month</span>
-                            @endif
-                        </div>
+{{--                        <div class="w-full text-sm text-gray-400">--}}
+{{--                            @if($bucketArray['accountId'] == $account->id)--}}
+{{--                                true--}}
+{{--                            @else--}}
+{{--                                <span>No invoice for this month</span>--}}
+{{--                            @endif--}}
+{{--                        </div>--}}
                     </div>
                     <div class="col-span-2 gap-3 flex justify-end items-center">
                         <a class="flex group h-8 duration-300 hover:border-gray-300 border-transparent border w-8 items-center justify-center bg-gray-200 rounded-lg" href="{{route('admin.accounts.show', $account->id)}}">

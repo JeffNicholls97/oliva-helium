@@ -163,8 +163,8 @@ class AccountsTable extends Component
     {
         $this->renderTable();
         $this->currentValue();
-        $this->invoiceHelium();
-        $this->showTotals();
+//        $this->invoiceHelium();
+//        $this->showTotals();
 //        $this->overallHeliumUsingCalender();
         return view('livewire.accounts-table');
     }
