@@ -51,7 +51,7 @@ class AccountsTable extends Component
 //        $this->bucketArray = [];
 //        $this->cashTotal = [];
 //        foreach($this->accounts as $account) {
-//            $addressKey = $account->address_key;
+//            $addressKey = $account->address_key; meer
 //
 //            $response = Http::withHeaders([
 //                'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36',
@@ -163,8 +163,8 @@ class AccountsTable extends Component
     {
         $this->renderTable();
         $this->currentValue();
-        $this->invoiceHelium();
-        $this->showTotals();
+//        $this->invoiceHelium();
+//        $this->showTotals();
 //        $this->overallHeliumUsingCalender();
         return view('livewire.accounts-table');
     }
