@@ -31,17 +31,13 @@ class AccountsGraph extends Component
 
         $response = Http::withHeaders([
             'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36',
-        ])->get('https://api.helium.io/v1/hotspots/'. $this->address['address_key'] .'/rewards/sum?min_time='. $this->minTime .'&max_time='. $this->maxTime .'&bucket=day');
-
-        $coinResponse = Http::withHeaders([
-            'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36',
-        ])->get('https://api.coingecko.com/api/v3/simple/price?ids=helium&vs_currencies=gbp');
+        ])->retry(3000)->get('https://api.helium.io/v1/hotspots/'. $this->address['address_key'] .'/rewards/sum?min_time='. $this->minTime .'&max_time='. $this->maxTime .'&bucket=day');
 
         $responseData = Http::withHeaders([
             'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36',
-        ])->get('https://api.helium.io/v1/hotspots/'. $this->address['address_key'] .'/rewards/sum?min_time='. $this->minTime .'&max_time='. $this->maxTime .'');
+        ])->retry(3000)->get('https://api.helium.io/v1/hotspots/'. $this->address['address_key'] .'/rewards/sum?min_time='. $this->minTime .'&max_time='. $this->maxTime .'');
 
-        if ($response->status() && $responseData->status()){
+        if ($response->status() == 200 && $responseData->status() == 200 ){
             $this->graphData = $response->collect();
             $this->graphValues = $responseData->collect();
         }
