@@ -44,16 +44,16 @@ class GetMinerTopStats extends Command
         foreach ($accounts as $account){
             $seven_day_res = Http::withHeaders([
                 'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36',
-            ])->retry(5)->get('https://api.helium.io/v1/hotspots/'. $account->address_key .'/rewards/sum?min_time=-7%20day');
+            ])->retry(15, 1000)->get('https://api.helium.io/v1/hotspots/'. $account->address_key .'/rewards/sum?min_time=-7%20day');
             $fourteen_day_res = Http::withHeaders([
                 'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36',
-            ])->retry(5)->get('https://api.helium.io/v1/hotspots/'. $account->address_key .'/rewards/sum?min_time=-14%20day');
+            ])->retry(15, 1000)->get('https://api.helium.io/v1/hotspots/'. $account->address_key .'/rewards/sum?min_time=-14%20day');
             $thirty_day_res = Http::withHeaders([
                 'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36',
-            ])->retry(5)->get('https://api.helium.io/v1/hotspots/'. $account->address_key .'/rewards/sum?min_time=-30%20day');
+            ])->retry(15, 1000)->get('https://api.helium.io/v1/hotspots/'. $account->address_key .'/rewards/sum?min_time=-30%20day');
             $yearly_res = Http::withHeaders([
                 'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36',
-            ])->retry(5)->get('https://api.helium.io/v1/hotspots/'. $account->address_key .'/rewards/sum?min_time=-52%20week');
+            ])->retry(15, 1000)->get('https://api.helium.io/v1/hotspots/'. $account->address_key .'/rewards/sum?min_time=-52%20week');
 
             $seven_day = $seven_day_res->json();
             $fourteen_day = $fourteen_day_res->json();

@@ -2,7 +2,7 @@
     <div class="flex h-full flex-col">
         <div class="w-full h-full grid grid-cols-12 gap-5">
             <div class="col-span-8">
-                <p class="text-gray-500">Showing Details for user {{ $address['first_name'] }} {{ $address['last_name'] }}<p>
+                <p class="text-gray-500">{{ $address['first_name'] }} {{ $address['last_name'] }}<p>
                 <div class="grid mt-10 grid-cols-3 gap-5">
                     <div wire:init='requestHotspotStats' class="col-span-1 p-5 border border-gray-100 bg-gray-50 rounded-lg">
                         @if($isLoadingAccountStats)

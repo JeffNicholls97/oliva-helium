@@ -16,7 +16,8 @@ class Accounts extends Model
         'housing_address',
         'address_key',
         'cash',
-        'account_image'
+        'account_image',
+        'order'
     ];
 
     public function invoices(){

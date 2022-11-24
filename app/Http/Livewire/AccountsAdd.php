@@ -20,11 +20,17 @@ class AccountsAdd extends Component
     public function submitAccountData()
     {
 
-        $filenameWithExt = $this->profilePicture->getClientOriginalName();
-        $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
-        $extension = $this->profilePicture->getClientOriginalExtension();
-        $fileNameToStore = $filename.'_'.time().'.'.$extension;
-        $path = $this->profilePicture->storeAs(public_path('images'),$fileNameToStore ,'real_public' );
+        if(!empty($this->profilePicture)){
+            $filenameWithExt = $this->profilePicture->getClientOriginalName();
+            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+            $extension = $this->profilePicture->getClientOriginalExtension();
+            $fileNameToStore = $filename.'_'.time().'.'.$extension;
+            $path = $this->profilePicture->storeAs(public_path('images'),$fileNameToStore ,'real_public' );
+        }else {
+            $path = asset('images/user-default.png');
+        }
+
+
 
 
         Accounts::create([
@@ -34,7 +40,8 @@ class AccountsAdd extends Component
             'housing_address' => $this->address,
             'email_address' => $this->emailAddress,
             'address_key' => $this->accountKey,
-            'cash' => $this->cash
+            'cash' => $this->cash,
+            'order' => 0
         ]);
 
         $this->reset();

@@ -27,9 +27,11 @@ class AccountInvoiceList extends Component
     public function downloadInvoice($id, $account) {
 
         $accountName = Accounts::select('miner_name')->where('id', $account)->first();
-        $currentDate = Carbon::now()->format('M-Y');
+        $currentDate = Invoice::select('invoice_date')->where('id', $id)->first();
+        $makeDate = strtotime($currentDate['invoice_date']);
+        $newDateformat = date('M-Y',$makeDate);
 
-        $fullString = 'invoice-'. $accountName->miner_name .'-'. $currentDate .'';
+        $fullString = 'invoice-'. $accountName->miner_name .'-'. $newDateformat .'';
 
 
         $invoices = Invoice::find($id);

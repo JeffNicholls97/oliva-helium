@@ -37,7 +37,7 @@ class AccountsTable extends Component
 
     public function renderTable()
     {
-        $this->accounts = Accounts::all();
+        $this->accounts = Accounts::orderBy('order')->get();
     }
 
 //    public function overallHeliumUsingCalender()
@@ -159,12 +159,20 @@ class AccountsTable extends Component
         $this->reset();
     }
 
+    public function updateAccountOrder($newOrder) {
+        foreach ($newOrder as $item) {
+            Accounts::find($item['value'])->update([
+                'order' => $item['order']
+            ]);
+        }
+    }
+
     public function render()
     {
         $this->renderTable();
         $this->currentValue();
-//        $this->invoiceHelium();
-//        $this->showTotals();
+        $this->invoiceHelium();
+        $this->showTotals();
 //        $this->overallHeliumUsingCalender();
         return view('livewire.accounts-table');
     }
