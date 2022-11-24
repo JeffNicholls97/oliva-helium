@@ -75,7 +75,6 @@ class AccountsMinerTransactionsAll extends Component
                     $this->lastActiveTime = $transactionArray[0]['timestamp'];
                     $this->newTran = $transactionArray;
                 }elseif($responseNull['data']){
-
                     $noCursor = $responseNew->collect();
                     $this->lastActiveTime = $noCursor['data'][0]['timestamp'];
 
@@ -148,10 +147,11 @@ class AccountsMinerTransactionsAll extends Component
 
         $invoice = Invoice::create([
             'accounts_id' => $this->account,
-            'invoice_link'  => '/test',
+            'invoice_link'  => 'Not Yet Downloaded',
             'cash' => $accountCash->cash,
             'invoice_data' => $formatData,
-            'invoice_date' => $this->startDate
+            'invoice_date' => $this->startDate,
+            'invoice_sent' => 0,
         ]);
 
         $this->emit('refreshComponent');

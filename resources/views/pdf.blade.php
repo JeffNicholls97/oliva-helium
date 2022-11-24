@@ -148,9 +148,10 @@
 
 
                             $totalArr['customer_hnt'] = $halfAmountConversionTotal;
+                            $totalArr['income_hnt'] = $sumCustomer / 100000000 ;
                         }
                     }
-                    $income = $totalArr['customer_hnt'] * $invoices->invoice_data['miner-info']['gbp-conversion'];
+                    $income = $totalArr['income_hnt'] * $invoices->invoice_data['miner-info']['gbp-conversion'];
                     $profit = $invoices->invoice_data['miner-info']['price-sold'] * $totalArr['customer_hnt'];
             @endphp
             <table style="border-collapse: collapse; width:100%;">
@@ -168,11 +169,19 @@
                 </tr>
                 <tr>
                     <td>Profit</td>
+                    @if($invoices->cash == 1)
                     <td>{{ number_format($profit, 2) }}</td>
+                    @else
+                        0
+                    @endif
                 </tr>
                 <tr>
                     <td>Delta</td>
+                    @if($invoices->cash == 1)
                     <td>{{ number_format($profit - $income, 2) }}</td>
+                    @else
+                        0
+                    @endif
                 </tr>
             </table>
         </div>

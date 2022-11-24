@@ -61,6 +61,9 @@ class InvoicesTable extends Component
         );
 
         $this->emailBody = $newFormatted;
+
+        $invoice->invoice_sent = 1;
+        $invoice->save();
     }
 
     public function sendEmail($accountId) {
@@ -85,6 +88,13 @@ class InvoicesTable extends Component
     public function deleteInvoice($id)
     {
         Invoice::find($id)->delete();
+    }
+
+    public function unsetTick($id)
+    {
+        $invoice = Invoice::where('id', $id)->first();
+        $invoice->invoice_sent = 0;
+        $invoice->save();
     }
 
     public function render()

@@ -3,7 +3,7 @@
         <div class="grid flex-grow w-full grid-cols-12 gap-5">
             <div class="col-span-2">
                 <p class="text-sm text-gray-400">Earnings (GBP)</p>
-                @if($graphValues['data']['total'])
+                @if($graphValues)
                 <p class="text-xl">{{ round($graphValues['data']['total'],4) }}<p>
                     @php
                         $hntAccountValue = round($graphValues['data']['total'],4);
@@ -21,19 +21,21 @@
                     <button class="bg-gray-200 rounded-full px-3 py-1 text-sm" wire:click="$set('timeLength', 30)">30 Days</button>
                 </div>
                 <div class="w-full justify-end items-end border-b border-gray-300 flex gap-3">
-                    @foreach ($graphData['data'] as $bar)
-                    @php
-                        $timestamp = $bar['timestamp'];
-                        $renderedTime = Carbon\Carbon::parse($timestamp)->format('M-d');
-                    @endphp
-                        <span data-tippy-content="Earnings - {{ round($bar['total'],3) }} HNT / {{ $renderedTime }}" style="max-height: 100px; height:{{ round($bar['total'],3) * 100 }}px;" class="w-7 bar-chart bg-[#fa4040]"></span>
-                    @endforeach
-                    <script>
-                        tippy('[data-tippy-content]', {
-                            arrow: true,
-                            animation: 'fade',
-                        });
-                    </script>
+                    @if($graphData)
+                        @foreach ($graphData['data'] as $bar)
+                        @php
+                            $timestamp = $bar['timestamp'];
+                            $renderedTime = Carbon\Carbon::parse($timestamp)->format('M-d');
+                        @endphp
+                            <span data-tippy-content="Earnings - {{ round($bar['total'],3) }} HNT / {{ $renderedTime }}" style="max-height: 100px; height:{{ round($bar['total'],3) * 100 }}px;" class="w-7 bar-chart bg-[#fa4040]"></span>
+                        @endforeach
+                        <script>
+                            tippy('[data-tippy-content]', {
+                                arrow: true,
+                                animation: 'fade',
+                            });
+                        </script>
+                    @endif
                 </div>
             </div>
         </div>
