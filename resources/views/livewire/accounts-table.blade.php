@@ -105,30 +105,32 @@
                     </div>
                     <div class="col-span-1 flex items-center">
                         <div class="w-full text-sm text-gray-400">
-                            @if($bucketArray['accountId'] == $account->id)
-                                @php
-                                    $totalArr = [];
-                                    $sumCustomer = 0;
-                                        foreach ($bucketArray['data'] as $invoiceTotal) {
-                                            if(array_key_exists('amount', $invoiceTotal)){
-                                                $sumCustomer += $invoiceTotal['amount'];
-                                                $splitAmountTotal = $sumCustomer / 2;
-                                                $halfAmountConversionTotal = $splitAmountTotal / 100000000;
+                            @if(!empty($bucketArray))
+                                @if($bucketArray['accountId'] == $account->id)
+                                    @php
+                                        $totalArr = [];
+                                        $sumCustomer = 0;
+                                            foreach ($bucketArray['data'] as $invoiceTotal) {
+                                                if(array_key_exists('amount', $invoiceTotal)){
+                                                    $sumCustomer += $invoiceTotal['amount'];
+                                                    $splitAmountTotal = $sumCustomer / 2;
+                                                    $halfAmountConversionTotal = $splitAmountTotal / 100000000;
 
 
-                                                $totalArr['customer_hnt'] = $halfAmountConversionTotal;
-                                                $totalArr['income_hnt'] = $sumCustomer / 100000000 ;
+                                                    $totalArr['customer_hnt'] = $halfAmountConversionTotal;
+                                                    $totalArr['income_hnt'] = $sumCustomer / 100000000 ;
+                                                }
                                             }
-                                        }
-                                @endphp
+                                    @endphp
 
-                                @if($account->cash)
-                                    £{{ number_format($totalArr['customer_hnt'], 2) }}
+                                    @if($account->cash)
+                                        £{{ number_format($totalArr['customer_hnt'], 2) }}
+                                    @else
+                                        {{ number_format($totalArr['customer_hnt'], 4) }} HNT
+                                    @endif
                                 @else
-                                    {{ number_format($totalArr['customer_hnt'], 4) }} HNT
+                                    <span>No invoice for this month</span>
                                 @endif
-
-
                             @else
                                 <span>No invoice for this month</span>
                             @endif
